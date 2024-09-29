@@ -62,7 +62,7 @@ const Specialist = async () => {
             </Box>
           ))}
         </Stack>
-        <Button variant="outlined" sx={{ mt: '15px' }}>
+        <Button variant="outlined" sx={{ mt: '20px' }}>
           View All
         </Button>
       </Box>

@@ -29,10 +29,21 @@ const Footer = () => {
         </Stack>
 
         <Stack direction="row" justifyContent="center" gap={4} py={3}>
-          <Image src={facebookIcon} width={30} height={30} alt="facebook" />
-          <Image src={instagramIcon} width={30} height={30} alt="facebook" />
-          <Image src={twitterIcon} width={30} height={30} alt="facebook" />
-          <Image src={linkedinIcon} width={30} height={30} alt="facebook" />
+          <Link href="www.facebook.com/arman-web-dev">
+            {' '}
+            <Image src={facebookIcon} width={30} height={30} alt="facebook" />
+          </Link>
+          <Link href="/">
+            <Image src={instagramIcon} width={30} height={30} alt="instagram" />
+          </Link>
+          <Link href="/">
+            {' '}
+            <Image src={twitterIcon} width={30} height={30} alt="twitter" />
+          </Link>
+          <Link href="/">
+            {' '}
+            <Image src={linkedinIcon} width={30} height={30} alt="linkedin" />
+          </Link>
         </Stack>
         <div className="border-b-[1px] border-dashed"></div>
         <Stack
