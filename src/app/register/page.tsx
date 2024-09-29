@@ -1,4 +1,8 @@
+'use client';
+
 import assets from '@/assets';
+import { registerPatient } from '@/services/actions/registerPatient';
+import { modifyPayload } from '@/utils/modifyPayload';
 import {
   Box,
   Button,
@@ -10,8 +14,48 @@ import {
 } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+
+interface IPatientData {
+  name: string;
+  email: string;
+  contactNumber: string;
+  address: string;
+}
+
+interface IPatientRegisterFormData {
+  password: string;
+  patient: IPatientData;
+}
 
 const RegisterPage = () => {
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<IPatientRegisterFormData>();
+  const onSubmit: SubmitHandler<IPatientRegisterFormData> = async (
+    values: any
+  ) => {
+    const data = modifyPayload(values);
+
+    try {
+      const res = await registerPatient(data);
+      if (res?.data.id) {
+        toast.success(res?.message);
+      }
+      router.push('/login');
+
+      console.log(res);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
   return (
     <Container>
       <Stack
@@ -47,7 +91,7 @@ const RegisterPage = () => {
             </Box>
           </Stack>
           <Box>
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Grid2 container spacing={2} my={1}>
                 <Grid2 size={12}>
                   <TextField
@@ -56,6 +100,7 @@ const RegisterPage = () => {
                     variant="outlined"
                     size="small"
                     fullWidth={true}
+                    {...register('patient.name')}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -65,6 +110,7 @@ const RegisterPage = () => {
                     variant="outlined"
                     size="small"
                     fullWidth={true}
+                    {...register('patient.email')}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -74,6 +120,7 @@ const RegisterPage = () => {
                     variant="outlined"
                     size="small"
                     fullWidth={true}
+                    {...register('password')}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -83,6 +130,7 @@ const RegisterPage = () => {
                     variant="outlined"
                     size="small"
                     fullWidth={true}
+                    {...register('patient.contactNumber')}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -92,10 +140,15 @@ const RegisterPage = () => {
                     variant="outlined"
                     size="small"
                     fullWidth={true}
+                    {...register('patient.address')}
                   />
                 </Grid2>
               </Grid2>
-              <Button sx={{ margin: '10px 0px' }} fullWidth={true}>
+              <Button
+                sx={{ margin: '10px 0px' }}
+                fullWidth={true}
+                type="submit"
+              >
                 Register
               </Button>
               <Typography component="p" fontWeight={300}>
