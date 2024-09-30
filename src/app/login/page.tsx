@@ -1,22 +1,22 @@
 'use client';
 
 import assets from '@/assets';
+import WSForm from '@/components/Forms/WSForm';
+import WSInput from '@/components/Forms/WSInput';
 import { userLogin } from '@/services/actions/userLogin';
 import { storeUserInfo } from '@/services/auth.services';
-import { modifyPayload } from '@/utils/modifyPayload';
 import {
   Box,
   Button,
   Container,
   Grid2,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FieldValues } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export interface IPatientLoginFormData {
@@ -26,18 +26,12 @@ export interface IPatientLoginFormData {
 
 const LoginPage = () => {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<IPatientLoginFormData>();
-
-  const onSubmit: SubmitHandler<IPatientLoginFormData> = async (
-    values: any
-  ) => {
+  const handleLogin = async (values: FieldValues) => {
+    console.log(values, 'values login');
     try {
       const res = await userLogin(values);
+      console.log(res, 'res login');
+
       if (res?.data?.accessToken) {
         toast.success(res?.message);
         storeUserInfo({ accessToken: res?.data?.accessToken });
@@ -83,26 +77,22 @@ const LoginPage = () => {
             </Box>
           </Stack>
           <Box>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <WSForm onSubmit={handleLogin}>
               <Grid2 container spacing={2} my={1}>
                 <Grid2 size={6}>
-                  <TextField
+                  <WSInput
+                    name="email"
                     label="Email"
                     type="email"
-                    variant="outlined"
-                    size="small"
                     fullWidth={true}
-                    {...register('email')}
                   />
                 </Grid2>
                 <Grid2 size={6}>
-                  <TextField
+                  <WSInput
+                    name="password"
                     label="Password"
                     type="password"
-                    variant="outlined"
-                    size="small"
                     fullWidth={true}
-                    {...register('password')}
                   />
                 </Grid2>
               </Grid2>
@@ -125,7 +115,7 @@ const LoginPage = () => {
                 New to WellSpiring Health?{' '}
                 <Link href="/register">Please Register</Link>
               </Typography>
-            </form>
+            </WSForm>
           </Box>
         </Box>
       </Stack>

@@ -1,6 +1,7 @@
 import { IPatientLoginFormData } from '@/app/login/page';
+import { FieldValues } from 'react-hook-form';
 
-export const userLogin = async (values: IPatientLoginFormData) => {
+export const userLogin = async (data: FieldValues) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
     {
@@ -8,7 +9,7 @@ export const userLogin = async (values: IPatientLoginFormData) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(values),
+      body: JSON.stringify(data),
       cache: 'no-store',
     }
   );

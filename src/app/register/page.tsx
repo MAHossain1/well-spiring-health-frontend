@@ -1,6 +1,8 @@
 'use client';
 
 import assets from '@/assets';
+import WSForm from '@/components/Forms/WSForm';
+import WSInput from '@/components/Forms/WSInput';
 import { registerPatient } from '@/services/actions/registerPatient';
 import { userLogin } from '@/services/actions/userLogin';
 import { storeUserInfo } from '@/services/auth.services';
@@ -17,38 +19,18 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-
-interface IPatientData {
-  name: string;
-  email: string;
-  contactNumber: string;
-  address: string;
-}
-
-interface IPatientRegisterFormData {
-  password: string;
-  patient: IPatientData;
-}
 
 const RegisterPage = () => {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<IPatientRegisterFormData>();
-  const onSubmit: SubmitHandler<IPatientRegisterFormData> = async (
-    values: any
-  ) => {
+
+  const handleRegister = async (values: FieldValues) => {
     const data = modifyPayload(values);
 
     try {
       const res = await registerPatient(data);
       if (res?.data?.id) {
-        console.log(res, 'frrom register');
         toast.success(res?.message);
         const result = await userLogin({
           email: values.patient.email,
@@ -99,56 +81,46 @@ const RegisterPage = () => {
             </Box>
           </Stack>
           <Box>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <WSForm onSubmit={handleRegister}>
               <Grid2 container spacing={2} my={1}>
                 <Grid2 size={12}>
-                  <TextField
+                  <WSInput
+                    name="patient.name"
                     label="Name"
                     type="text"
-                    variant="outlined"
-                    size="small"
                     fullWidth={true}
-                    {...register('patient.name')}
                   />
                 </Grid2>
                 <Grid2 size={6}>
-                  <TextField
+                  <WSInput
+                    name="patient.email"
                     label="Email"
                     type="email"
-                    variant="outlined"
-                    size="small"
                     fullWidth={true}
-                    {...register('patient.email')}
                   />
                 </Grid2>
                 <Grid2 size={6}>
-                  <TextField
+                  <WSInput
+                    name="password"
                     label="Password"
                     type="password"
-                    variant="outlined"
-                    size="small"
                     fullWidth={true}
-                    {...register('password')}
                   />
                 </Grid2>
                 <Grid2 size={6}>
-                  <TextField
+                  <WSInput
+                    name="patient.contactNumber"
                     label="Contact Number"
                     type="tel"
-                    variant="outlined"
-                    size="small"
                     fullWidth={true}
-                    {...register('patient.contactNumber')}
                   />
                 </Grid2>
                 <Grid2 size={6}>
-                  <TextField
+                  <WSInput
+                    name="patient.address"
                     label="Address"
                     type="text"
-                    variant="outlined"
-                    size="small"
                     fullWidth={true}
-                    {...register('patient.address')}
                   />
                 </Grid2>
               </Grid2>
@@ -162,7 +134,7 @@ const RegisterPage = () => {
               <Typography component="p" fontWeight={300}>
                 Do you already have an account? <Link href="/login">Login</Link>
               </Typography>
-            </form>
+            </WSForm>
           </Box>
         </Box>
       </Stack>
