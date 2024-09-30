@@ -1,4 +1,8 @@
+'use client';
+
 import assets from '@/assets';
+import { userLogin } from '@/services/actions/userLogin';
+import { modifyPayload } from '@/utils/modifyPayload';
 import {
   Box,
   Button,
@@ -10,8 +14,32 @@ import {
 } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
+import { SubmitHandler, useForm } from 'react-hook-form';
+
+export interface IPatientLoginFormData {
+  email: string;
+  password: string;
+}
 
 const LoginPage = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<IPatientLoginFormData>();
+
+  const onSubmit: SubmitHandler<IPatientLoginFormData> = async (
+    values: any
+  ) => {
+    try {
+      const res = await userLogin(values);
+      console.log(res, 'from login');
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
   return (
     <Container>
       <Stack
@@ -47,7 +75,7 @@ const LoginPage = () => {
             </Box>
           </Stack>
           <Box>
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Grid2 container spacing={2} my={1}>
                 <Grid2 size={6}>
                   <TextField
@@ -56,6 +84,7 @@ const LoginPage = () => {
                     variant="outlined"
                     size="small"
                     fullWidth={true}
+                    {...register('email')}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -65,6 +94,7 @@ const LoginPage = () => {
                     variant="outlined"
                     size="small"
                     fullWidth={true}
+                    {...register('password')}
                   />
                 </Grid2>
               </Grid2>
@@ -76,7 +106,11 @@ const LoginPage = () => {
               >
                 <Link href="/register">Forget Password?</Link>
               </Typography>
-              <Button sx={{ margin: '10px 0px' }} fullWidth={true}>
+              <Button
+                sx={{ margin: '10px 0px' }}
+                fullWidth={true}
+                type="submit"
+              >
                 Login
               </Button>
               <Typography mt={1} component="p" fontWeight={300}>

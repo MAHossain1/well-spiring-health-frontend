@@ -49,8 +49,6 @@ const RegisterPage = () => {
         toast.success(res?.message);
       }
       router.push('/login');
-
-      console.log(res);
     } catch (error: any) {
       console.log(error);
     }
