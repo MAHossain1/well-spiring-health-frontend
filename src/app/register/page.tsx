@@ -2,6 +2,8 @@
 
 import assets from '@/assets';
 import { registerPatient } from '@/services/actions/registerPatient';
+import { userLogin } from '@/services/actions/userLogin';
+import { storeUserInfo } from '@/services/auth.services';
 import { modifyPayload } from '@/utils/modifyPayload';
 import {
   Box,
@@ -45,10 +47,18 @@ const RegisterPage = () => {
 
     try {
       const res = await registerPatient(data);
-      if (res?.data.id) {
+      if (res?.data?.id) {
+        console.log(res, 'frrom register');
         toast.success(res?.message);
+        const result = await userLogin({
+          email: values.patient.email,
+          password: values.password,
+        });
+        if (result?.data?.accessToken) {
+          storeUserInfo({ accessToken: result?.data?.accessToken });
+          router.push('/');
+        }
       }
-      router.push('/login');
     } catch (error: any) {
       console.log(error);
     }
