@@ -2,6 +2,7 @@
 
 import assets from '@/assets';
 import { userLogin } from '@/services/actions/userLogin';
+import { storeUserInfo } from '@/services/auth.services';
 import { modifyPayload } from '@/utils/modifyPayload';
 import {
   Box,
@@ -34,6 +35,9 @@ const LoginPage = () => {
   ) => {
     try {
       const res = await userLogin(values);
+      if (res?.data?.accessToken) {
+        storeUserInfo({ accessToken: res?.data?.accessToken });
+      }
       console.log(res, 'from login');
     } catch (error: any) {
       console.log(error);
