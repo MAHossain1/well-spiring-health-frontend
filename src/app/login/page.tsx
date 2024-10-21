@@ -5,6 +5,7 @@ import WSForm from '@/components/Forms/WSForm';
 import WSInput from '@/components/Forms/WSInput';
 import { userLogin } from '@/services/actions/userLogin';
 import { storeUserInfo } from '@/services/auth.services';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Box,
   Button,
@@ -18,19 +19,18 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FieldValues } from 'react-hook-form';
 import { toast } from 'sonner';
+import { z } from 'zod';
 
-export interface IPatientLoginFormData {
-  email: string;
-  password: string;
-}
+export const validationSchema = z.object({
+  email: z.string().email('Please enter a valid email'),
+  password: z.string().min(6, 'Password should be at least 6 characters.'),
+});
 
 const LoginPage = () => {
   const router = useRouter();
   const handleLogin = async (values: FieldValues) => {
-    console.log(values, 'values login');
     try {
       const res = await userLogin(values);
-      console.log(res, 'res login');
 
       if (res?.data?.accessToken) {
         toast.success(res?.message);
@@ -77,7 +77,14 @@ const LoginPage = () => {
             </Box>
           </Stack>
           <Box>
-            <WSForm onSubmit={handleLogin}>
+            <WSForm
+              onSubmit={handleLogin}
+              resolver={zodResolver(validationSchema)}
+              defaultValues={{
+                email: '',
+                password: '',
+              }}
+            >
               <Grid2 container spacing={2} my={1}>
                 <Grid2 size={6}>
                   <WSInput

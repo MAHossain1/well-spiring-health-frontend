@@ -1,4 +1,3 @@
-import { IPatientLoginFormData } from '@/app/login/page';
 import { FieldValues } from 'react-hook-form';
 
 export const userLogin = async (data: FieldValues) => {

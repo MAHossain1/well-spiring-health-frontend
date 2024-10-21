@@ -89,6 +89,7 @@ const RegisterPage = () => {
                     label="Name"
                     type="text"
                     fullWidth={true}
+                    required={true}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -97,6 +98,7 @@ const RegisterPage = () => {
                     label="Email"
                     type="email"
                     fullWidth={true}
+                    required={true}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -105,6 +107,7 @@ const RegisterPage = () => {
                     label="Password"
                     type="password"
                     fullWidth={true}
+                    required={true}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -113,6 +116,7 @@ const RegisterPage = () => {
                     label="Contact Number"
                     type="tel"
                     fullWidth={true}
+                    required={true}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -121,6 +125,7 @@ const RegisterPage = () => {
                     label="Address"
                     type="text"
                     fullWidth={true}
+                    required={true}
                   />
                 </Grid2>
               </Grid2>
