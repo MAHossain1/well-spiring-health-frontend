@@ -17,6 +17,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -28,6 +29,8 @@ export const validationSchema = z.object({
 
 const LoginPage = () => {
   const router = useRouter();
+  const [error, setError] = useState('');
+
   const handleLogin = async (values: FieldValues) => {
     try {
       const res = await userLogin(values);
@@ -36,6 +39,8 @@ const LoginPage = () => {
         toast.success(res?.message);
         storeUserInfo({ accessToken: res?.data?.accessToken });
         router.push('/');
+      } else {
+        setError(res?.message);
       }
     } catch (error: any) {
       console.log(error);
@@ -76,6 +81,23 @@ const LoginPage = () => {
               </Typography>
             </Box>
           </Stack>
+
+          {error && (
+            <Box>
+              <Typography
+                sx={{
+                  backgroundColor: 'red',
+                  padding: '1px',
+                  borderRadius: '2px',
+                  color: 'white',
+                  marginTop: '5px',
+                }}
+              >
+                {error}
+              </Typography>
+            </Box>
+          )}
+
           <Box>
             <WSForm
               onSubmit={handleLogin}

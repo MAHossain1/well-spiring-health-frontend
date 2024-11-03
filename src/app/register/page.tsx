@@ -7,20 +7,45 @@ import { registerPatient } from '@/services/actions/registerPatient';
 import { userLogin } from '@/services/actions/userLogin';
 import { storeUserInfo } from '@/services/auth.services';
 import { modifyPayload } from '@/utils/modifyPayload';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Box,
   Button,
   Container,
   Grid2,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { FieldValues } from 'react-hook-form';
 import { toast } from 'sonner';
+import { z } from 'zod';
+
+export const patientValidationSchema = z.object({
+  name: z.string().min(1, 'Please enter your name!'),
+  email: z.string().email('Please enter a valid email address!'),
+  contactNumber: z
+    .string()
+    .regex(/^\d{11}$/, 'Please provide a valid phone number!'),
+  address: z.string().min(1, 'Please enter your address!'),
+});
+
+export const validationSchema = z.object({
+  password: z.string().min(6, 'Must be at least 6 characters'),
+  patient: patientValidationSchema,
+});
+
+export const defaultValues = {
+  password: '',
+  patient: {
+    name: '',
+    email: '',
+    contactNumber: '',
+    address: '',
+  },
+};
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -81,7 +106,11 @@ const RegisterPage = () => {
             </Box>
           </Stack>
           <Box>
-            <WSForm onSubmit={handleRegister}>
+            <WSForm
+              onSubmit={handleRegister}
+              resolver={zodResolver(validationSchema)}
+              defaultValues={defaultValues}
+            >
               <Grid2 container spacing={2} my={1}>
                 <Grid2 size={12}>
                   <WSInput
@@ -89,7 +118,6 @@ const RegisterPage = () => {
                     label="Name"
                     type="text"
                     fullWidth={true}
-                    required={true}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -98,7 +126,6 @@ const RegisterPage = () => {
                     label="Email"
                     type="email"
                     fullWidth={true}
-                    required={true}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -107,7 +134,6 @@ const RegisterPage = () => {
                     label="Password"
                     type="password"
                     fullWidth={true}
-                    required={true}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -116,7 +142,6 @@ const RegisterPage = () => {
                     label="Contact Number"
                     type="tel"
                     fullWidth={true}
-                    required={true}
                   />
                 </Grid2>
                 <Grid2 size={6}>
@@ -125,7 +150,6 @@ const RegisterPage = () => {
                     label="Address"
                     type="text"
                     fullWidth={true}
-                    required={true}
                   />
                 </Grid2>
               </Grid2>
