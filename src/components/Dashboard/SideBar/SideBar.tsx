@@ -1,38 +1,12 @@
-import {
-  Box,
-  Divider,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-  Toolbar,
-  Typography,
-} from '@mui/material';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import Image from 'next/image';
 import assets from '@/assets';
+import { UserRole } from '@/types';
+import { drawerItems } from '@/utils/drawerItems';
+import { Box, List, Stack, Typography } from '@mui/material';
+import Image from 'next/image';
 import Link from 'next/link';
+import SidebarItems from './SidebarItem';
 
 const SideBar = () => {
-  const drawer = (
-    <div>
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
   return (
     <Box>
       <Stack
@@ -50,7 +24,11 @@ const SideBar = () => {
         <Image src={assets.svgs.logo} alt="logo" width={40} height={40} />
         <Typography variant="h6">WellSpiring Health</Typography>
       </Stack>
-      {drawer}
+      <List>
+        {drawerItems('admin' as UserRole).map((item, index) => (
+          <SidebarItems key={index} item={item} />
+        ))}
+      </List>
     </Box>
   );
 };
