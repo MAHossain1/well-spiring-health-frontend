@@ -2,16 +2,33 @@ import WSFileUploader from '@/components/Forms/WSFileUploader';
 import WSForm from '@/components/Forms/WSForm';
 import WSInput from '@/components/Forms/WSInput';
 import WSModal from '@/components/Shared/WSModal/WSModal';
-import { Button, Grid, Grid2, TextField } from '@mui/material';
+import { useCreateSpecialtyMutation } from '@/redux/api/specialtiesApi';
+import { modifyPayload } from '@/utils/modifyPayload';
+import { Button, Grid, Grid2 } from '@mui/material';
 import { FieldValues } from 'react-hook-form';
+import { toast } from 'sonner';
 
 type TProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const SpecialistModal = ({ open, setOpen }: TProps) => {
-  const handleFormSubmit = (values: FieldValues) => {};
+const SpecialtyModal = ({ open, setOpen }: TProps) => {
+  const [createSpecialty] = useCreateSpecialtyMutation();
+
+  const handleFormSubmit = async (values: FieldValues) => {
+    const data = modifyPayload(values);
+
+    try {
+      const res = await createSpecialty(data).unwrap();
+      if (res?.id) {
+        toast.success('Specialty created successfully!!');
+        setOpen(false);
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
 
   return (
     <WSModal open={open} setOpen={setOpen} title="Create A New Specialty">
@@ -37,4 +54,4 @@ const SpecialistModal = ({ open, setOpen }: TProps) => {
   );
 };
 
-export default SpecialistModal;
+export default SpecialtyModal;
