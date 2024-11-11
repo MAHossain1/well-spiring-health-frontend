@@ -35,3 +35,9 @@ export type TGenericErrorResponse = {
 };
 
 export const Gender = ['MALE', 'FEMALE'];
+
+export type IMeta = {
+  page: number;
+  limit: number;
+  total: number;
+};

@@ -3,11 +3,10 @@ import WSForm from '@/components/Forms/WSForm';
 import WSInput from '@/components/Forms/WSInput';
 import WSSelectField from '@/components/Forms/WSSelectField';
 import WSFullScreenModal from '@/components/Shared/WSModal/WSFullScreenModal';
-import WSModal from '@/components/Shared/WSModal/WSModal';
-import { useCreateSpecialtyMutation } from '@/redux/api/specialtiesApi';
+import { useCreateDoctorMutation } from '@/redux/api/doctorApi';
 import { Gender } from '@/types';
 import { modifyPayload } from '@/utils/modifyPayload';
-import { Button, Grid, Grid2 } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { FieldValues } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -17,56 +16,61 @@ type TProps = {
 };
 
 const DoctorModal = ({ open, setOpen }: TProps) => {
+  const [createDoctor] = useCreateDoctorMutation();
+
   const handleFormSubmit = async (values: FieldValues) => {
     console.log(values);
+    values.doctor.experience = Number(values.doctor.experience);
+    values.doctor.apointmentFee = Number(values.doctor.apointmentFee);
     const data = modifyPayload(values);
 
     try {
-      //   const res = await createSpecialty(data).unwrap();
-      //   if (res?.id) {
-      //     toast.success('Specialty created successfully!!');
-      //     setOpen(false);
-      //   }
+      const res = await createDoctor(data).unwrap();
+      console.log(res, 'created doctor');
+      if (res?.id) {
+        toast.success('Doctor created successfully!!');
+        setOpen(false);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
-  //   const defaultValues = {
-  //     doctor: {
-  //       email: 'arman@doctor.com',
-  //       name: 'Arman',
-  //       contactNumber: 'dke03343423',
-  //       address: 'Thakkurgaon',
-  //       registrationNumber: '23',
-  //       gender: 'MALE',
-  //       experience: 2,
-  //       apointmentFee: 20,
-  //       qualification: 'mb',
-  //       currentWorkingPlace: 'DK',
-  //       designation: 'ER',
-  //       profilePhoto: '',
-  //     },
-  //     password: 'ami123',
-  //   };
-
   const defaultValues = {
     doctor: {
-      email: '',
-      name: '',
-      contactNumber: '',
-      address: '',
-      registrationNumber: '',
-      gender: '',
+      email: 'arman@doctor.com',
+      name: 'Arman',
+      contactNumber: 'dke03343423',
+      address: 'Thakkurgaon',
+      registrationNumber: '23',
+      gender: 'MALE',
       experience: 2,
       apointmentFee: 20,
-      qualification: '',
-      currentWorkingPlace: '',
-      designation: '',
+      qualification: 'mb',
+      currentWorkingPlace: 'DK',
+      designation: 'ER',
       profilePhoto: '',
     },
-    password: '',
+    password: 'ami123',
   };
+
+  //   const defaultValues = {
+  //     doctor: {
+  //       email: '',
+  //       name: '',
+  //       contactNumber: '',
+  //       address: '',
+  //       registrationNumber: '',
+  //       gender: '',
+  //       experience: 2,
+  //       apointmentFee: 20,
+  //       qualification: '',
+  //       currentWorkingPlace: '',
+  //       designation: '',
+  //       profilePhoto: '',
+  //     },
+  //     password: '',
+  //   };
 
   return (
     <WSFullScreenModal
@@ -177,6 +181,12 @@ const DoctorModal = ({ open, setOpen }: TProps) => {
               label="Designation"
               fullWidth={true}
               sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
+            <WSFileUploader
+              name="doctor.profilePhoto"
+              label="Upload Profile Photo"
             />
           </Grid>
         </Grid>
