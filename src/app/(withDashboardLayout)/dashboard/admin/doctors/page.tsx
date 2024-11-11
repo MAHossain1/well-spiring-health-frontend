@@ -3,20 +3,49 @@
 import { Box, Button, IconButton, Stack, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import DoctorModal from './components/DoctorModal';
-import { useGetAllDoctorsQuery } from '@/redux/api/doctorApi';
+import {
+  useDeleteDoctorMutation,
+  useGetAllDoctorsQuery,
+} from '@/redux/api/doctorApi';
 import { DataGrid, GridColDef, GridDeleteIcon } from '@mui/x-data-grid';
 
 import EditIcon from '@mui/icons-material/Edit';
 import Link from 'next/link';
+import { useDebounced } from '@/redux/hooks';
+import { toast } from 'sonner';
 
 const DoctorsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const query: Record<string, any> = {};
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
-  const { data, isLoading } = useGetAllDoctorsQuery({});
+  const debouncedTerm = useDebounced({
+    searchQuery: searchTerm,
+    delay: 600,
+  });
+
+  if (!!debouncedTerm) {
+    query['searchTerm'] = searchTerm;
+  }
+  const { data, isLoading } = useGetAllDoctorsQuery({ ...query });
+  const [deleteDoctor] = useDeleteDoctorMutation();
   // console.log(data);
 
   const doctors = data?.doctors;
   const meta = data?.meta;
+
+  const handleDelete = async (id: string) => {
+    console.log(id);
+    try {
+      const res = await deleteDoctor(id).unwrap();
+      // console.log(res);
+      if (res?.id) {
+        toast.success('Doctor deleted successfully!!!');
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Name', flex: 1 },
@@ -34,7 +63,7 @@ const DoctorsPage = () => {
         return (
           <Box>
             <IconButton
-              // onClick={() => handleDelete(row.id)}
+              onClick={() => handleDelete(row.id)}
               aria-label="delete"
             >
               <GridDeleteIcon sx={{ color: 'red' }} />
@@ -55,7 +84,11 @@ const DoctorsPage = () => {
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Button onClick={() => setIsModalOpen(true)}>Create New Doctor</Button>
         <DoctorModal open={isModalOpen} setOpen={setIsModalOpen} />
-        <TextField size="small" placeholder="Search Doctors" />
+        <TextField
+          onChange={e => setSearchTerm(e.target.value)}
+          size="small"
+          placeholder="Search Doctors"
+        />
       </Stack>
       {!isLoading ? (
         <Box my={2}>
