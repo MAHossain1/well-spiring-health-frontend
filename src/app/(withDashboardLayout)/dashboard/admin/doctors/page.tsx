@@ -35,7 +35,7 @@ const DoctorsPage = () => {
   const meta = data?.meta;
 
   const handleDelete = async (id: string) => {
-    console.log(id);
+    // console.log(id);
     try {
       const res = await deleteDoctor(id).unwrap();
       // console.log(res);
