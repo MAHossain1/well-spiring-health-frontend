@@ -12,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import SideBar from '../SideBar/SideBar';
 import { Avatar, Badge, Stack } from '@mui/material';
+import { useGetSingleUserQuery } from '@/redux/api/userApi';
+import AccountMenu from '../AccountMenu/AccountMenu';
 
 const drawerWidth = 240;
 
@@ -38,6 +40,9 @@ export default function DashboardDrawer({
     }
   };
 
+  const { data, isLoading } = useGetSingleUserQuery({});
+  // console.log(data);
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -62,24 +67,33 @@ export default function DashboardDrawer({
           >
             <MenuIcon />
           </IconButton>
-          <Box>
-            <Typography
-              variant="body2"
-              noWrap
-              component="div"
-              sx={{ color: 'rgba(11, 17, 52, 0.6)' }}
-            >
-              Hi, Arman
-            </Typography>
-            <Typography
-              variant="body2"
-              noWrap
-              component="div"
-              color="primary.main"
-            >
-              Welcome to, WellSpring Health!!
-            </Typography>
-            {/* <Stack direction="row" gap={3}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+            }}
+          >
+            <Box>
+              <Typography
+                variant="body2"
+                noWrap
+                component="div"
+                sx={{ color: 'rgba(11, 17, 52, 0.6)' }}
+              >
+                Hi, {isLoading ? 'Loading...' : data?.name},
+              </Typography>
+              <Typography
+                variant="body2"
+                noWrap
+                component="div"
+                color="primary.main"
+              >
+                Welcome to, WellSpring Health!!
+              </Typography>
+            </Box>
+            <Stack direction="row" gap={3}>
               <Badge badgeContent={1} color="primary">
                 <IconButton sx={{ background: '#ffffff' }}>
                   <NotificationsNoneIcon color="action" />
@@ -87,7 +101,7 @@ export default function DashboardDrawer({
               </Badge>
               <Avatar alt={data?.name} src={data?.profilePhoto} />
               <AccountMenu />
-            </Stack> */}
+            </Stack>
           </Box>
         </Toolbar>
       </AppBar>
