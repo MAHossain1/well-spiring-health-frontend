@@ -9,6 +9,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { useCreateDoctorScheduleMutation } from '@/redux/api/doctorScheduleApi';
 import WSModal from '@/components/Shared/WSModal/WSModal';
 import MultipleSelectFieldChip from './MultipleSelectFieldChip';
+import { toast } from 'sonner';
 
 type TProps = {
   open: boolean;
@@ -43,14 +44,17 @@ const DoctorScheduleModal = ({ open, setOpen }: TProps) => {
   const [createDoctorSchedule, { isLoading }] =
     useCreateDoctorScheduleMutation();
 
-  console.log(selectedScheduleIds);
+  //   console.log(selectedScheduleIds);
 
   const onSubmit = async () => {
     try {
       const res = await createDoctorSchedule({
         scheduleIds: selectedScheduleIds,
       });
-      console.log(res);
+      if (res?.data) {
+        toast.success('Schedule created successfully!!!');
+      }
+      //   console.log(res);
       setOpen(false);
     } catch (error) {
       console.log(error);
