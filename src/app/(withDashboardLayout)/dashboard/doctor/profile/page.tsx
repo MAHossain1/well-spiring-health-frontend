@@ -1,13 +1,28 @@
 'use client';
 
-import { useGetMYProfileQuery } from '@/redux/api/myProfile';
-import { Box, Container, Typography } from '@mui/material';
+import AutoFileUploader from '@/components/Forms/AutoFileUploader';
+import {
+  useGetMYProfileQuery,
+  useUpdateMYProfileMutation,
+} from '@/redux/api/myProfile';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Box, Container } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import Image from 'next/image';
 import DoctorInformation from './components/DoctorInformation';
 
 const DoctorProfilePage = () => {
   const { data, isLoading } = useGetMYProfileQuery(undefined);
+  const [updateMYProfile, { isLoading: loading }] =
+    useUpdateMYProfileMutation();
+
+  const fileUploadHandler = (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('data', JSON.stringify({}));
+
+    updateMYProfile(formData);
+  };
 
   if (isLoading) {
     <p>Loading</p>;
@@ -16,9 +31,9 @@ const DoctorProfilePage = () => {
   //   console.log(data);
 
   return (
-    <Container>
+    <Container sx={{ mt: 4 }}>
       <Grid container spacing={2}>
-        <Grid size={4}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Box
             sx={{
               height: 300,
@@ -34,9 +49,22 @@ const DoctorProfilePage = () => {
               alt="User Photo"
             />
           </Box>
-        </Grid>
-        <Grid size={{ xs: 12, md: 8 }}>
-          <DoctorInformation data={data} />
+          <Box my={3}>
+            {loading ? (
+              <p>Uploading...</p>
+            ) : (
+              <AutoFileUploader
+                name="file"
+                label="Choose Your Profile Photo"
+                icon={<CloudUploadIcon />}
+                onFileUpload={fileUploadHandler}
+                variant="text"
+              />
+            )}
+          </Box>
+          <Grid size={{ xs: 12, md: 8 }}>
+            <DoctorInformation data={data} />
+          </Grid>
         </Grid>
       </Grid>
     </Container>
