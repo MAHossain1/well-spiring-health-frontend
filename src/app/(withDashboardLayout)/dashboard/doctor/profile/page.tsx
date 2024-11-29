@@ -1,23 +1,24 @@
 'use client';
 
-import AutoFileUploader from '@/components/Forms/AutoFileUploader';
 import {
   useGetMYProfileQuery,
   useUpdateMYProfileMutation,
 } from '@/redux/api/myProfile';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { Box, Button, Container } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import { Box, Button, Container, Grid2 } from '@mui/material';
+2;
 import Image from 'next/image';
-import DoctorInformation from './components/DoctorInformation';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import AutoFileUploader from '@/components/Forms/AutoFileUploader';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ProfileUpdateModal from './components/ProfileUpdateModal';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import DoctorInformation from './components/DoctorInformation';
 
-const DoctorProfilePage = () => {
+const Profile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { data, isLoading } = useGetMYProfileQuery(undefined);
-  const [updateMYProfile, { isLoading: loading }] =
+  const [updateMYProfile, { isLoading: updating }] =
     useUpdateMYProfileMutation();
 
   const fileUploadHandler = (file: File) => {
@@ -29,10 +30,8 @@ const DoctorProfilePage = () => {
   };
 
   if (isLoading) {
-    <p>Loading</p>;
+    <p>Loading...</p>;
   }
-
-  //   console.log(data);
 
   return (
     <>
@@ -42,13 +41,13 @@ const DoctorProfilePage = () => {
         id={data?.id}
       />
       <Container sx={{ mt: 4 }}>
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12, md: 8 }}>
+        <Grid2 container spacing={4}>
+          <Grid2 size={{ xs: 12, md: 8 }}>
             <Box
               sx={{
-                height: 300,
+                height: 400,
                 width: '100%',
-                overflow: 'block',
+                overflow: 'hidden',
                 borderRadius: 1,
               }}
             >
@@ -60,7 +59,7 @@ const DoctorProfilePage = () => {
               />
             </Box>
             <Box my={3}>
-              {loading ? (
+              {updating ? (
                 <p>Uploading...</p>
               ) : (
                 <AutoFileUploader
@@ -79,14 +78,14 @@ const DoctorProfilePage = () => {
             >
               Edit Profile
             </Button>
-          </Grid>
-          <Grid size={{ xs: 12, md: 8 }}>
+          </Grid2>
+          <Grid2 size={{ xs: 12, md: 8 }}>
             <DoctorInformation data={data} />
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </Container>
     </>
   );
 };
 
-export default DoctorProfilePage;
+export default Profile;

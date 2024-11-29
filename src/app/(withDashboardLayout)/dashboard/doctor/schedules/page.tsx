@@ -16,7 +16,7 @@ const DoctorSchedulesPage = () => {
   const query: Record<string, any> = {};
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(10);
 
   query['page'] = page;
   query['limit'] = limit;
