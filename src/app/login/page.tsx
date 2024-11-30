@@ -43,7 +43,7 @@ const LoginPage = () => {
         setError(res?.message);
       }
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -125,14 +125,20 @@ const LoginPage = () => {
                   />
                 </Grid2>
               </Grid2>
-              <Typography
-                mb={1}
-                textAlign={'end'}
-                component="p"
-                fontWeight={300}
-              >
-                <Link href="/register">Forget Password?</Link>
-              </Typography>
+              <Link href="/forgot-password">
+                <Typography
+                  mb={1}
+                  textAlign={'end'}
+                  component="p"
+                  fontWeight={300}
+                  sx={{
+                    textDecoration: 'underline',
+                    color: 'blue',
+                  }}
+                >
+                  Forget Password?
+                </Typography>
+              </Link>
               <Button
                 sx={{ margin: '10px 0px' }}
                 fullWidth={true}

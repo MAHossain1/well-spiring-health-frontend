@@ -19,7 +19,7 @@ export const getUserInfo = () => {
 
     return {
       ...decodedData,
-      role: decodedData?.role.toLowerCase(),
+      role: decodedData?.role?.toLowerCase(),
     };
   }
 };
